@@ -6,7 +6,6 @@ import com.chenmeng.project.exception.BusinessException;
 import com.chenmeng.project.mapper.InterfaceInfoMapper;
 import com.chenmeng.project.model.entity.InterfaceInfo;
 import com.chenmeng.project.service.InterfaceInfoService;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +34,12 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
 
         // 创建时，所有参数必须非空
         if (add) {
-            if (StringUtils.isAnyBlank(name, description, url, requestHeader, responseHeader, method) || ObjectUtils.anyNull(userId, status)) {
+            if (StringUtils.isAnyBlank(name, description, url, requestHeader, responseHeader, method)) {
                 // 参数为空 - 有误
                 throw new BusinessException(ErrorCode.PARAMS_ERROR);
             }
         }
-        if (StringUtils.isNotBlank(name) && name.length() > 256) {
+        if (StringUtils.isNotBlank(name) && name.length() > 50) {
             // 参数名字过长 - 有误
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "名字过长");
         }

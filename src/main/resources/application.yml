@@ -1,10 +1,10 @@
 spring:
   application:
-    name: myapi-backend
+    name: cmapi-backend
   # DataSource Config
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/myapi
+    url: jdbc:mysql://localhost:3306/cmapi
     username: root
     password: 123456
   mvc:
@@ -27,6 +27,7 @@ server:
   servlet:
     context-path: /api
 mybatis-plus:
+  mapper-locations: classpath*:/mapper/**Mapper.xml
   configuration:
     # 关闭驼峰映射
     map-underscore-to-camel-case: false
