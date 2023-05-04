@@ -1,0 +1,9 @@
+server:
+  port: 8123
+  servlet:
+    context-path: /api
+
+chenmeng:
+  client:
+    access-key: 沉梦
+    secret-key: abc

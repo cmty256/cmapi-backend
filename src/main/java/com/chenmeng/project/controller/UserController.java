@@ -8,7 +8,6 @@ import com.chenmeng.project.common.DeleteRequest;
 import com.chenmeng.project.common.ErrorCode;
 import com.chenmeng.project.common.ResultUtils;
 import com.chenmeng.project.exception.BusinessException;
-import com.chenmeng.project.model.dto.*;
 import com.chenmeng.project.model.dto.user.*;
 import com.chenmeng.project.model.entity.User;
 import com.chenmeng.project.model.vo.UserVO;
@@ -29,6 +28,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/user")
+@CrossOrigin
 public class UserController {
 
     @Resource

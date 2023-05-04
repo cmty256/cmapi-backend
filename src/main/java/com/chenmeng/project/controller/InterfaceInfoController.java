@@ -41,6 +41,9 @@ public class InterfaceInfoController {
     @Resource
     private UserService userService;
 
+    //@Resource
+    //private CmApiClient cmApiClient;
+
     // region 增删改查
 
     /**
@@ -193,5 +196,6 @@ public class InterfaceInfoController {
         Page<InterfaceInfo> interfaceInfoPage = interfaceInfoService.page(new Page<>(current, size), queryWrapper);
         return ResultUtils.success(interfaceInfoPage);
     }
+
 
 }
