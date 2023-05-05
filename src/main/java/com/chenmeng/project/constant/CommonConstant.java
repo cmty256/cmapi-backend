@@ -3,7 +3,7 @@ package com.chenmeng.project.constant;
 /**
  * 通用常量
  *
- * @author chenmeng
+ * @author 沉梦
  */
 public interface CommonConstant {
 
