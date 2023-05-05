@@ -5,7 +5,7 @@ import com.chenmeng.project.common.ErrorCode;
 /**
  * 自定义异常类（业务异常）
  *
- * @author chenmeng
+ * @author 沉梦
  */
 public class BusinessException extends RuntimeException {
 

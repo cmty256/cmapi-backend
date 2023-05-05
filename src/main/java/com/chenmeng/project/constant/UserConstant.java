@@ -3,7 +3,7 @@ package com.chenmeng.project.constant;
 /**
  * 用户常量
  *
- * @author chenmeng
+ * @author 沉梦
  */
 public interface UserConstant {
 
