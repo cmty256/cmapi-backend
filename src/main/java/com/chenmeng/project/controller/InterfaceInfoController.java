@@ -1,12 +1,12 @@
 package com.chenmeng.project.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.chenmeng.project.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
+import com.chenmeng.sdk.client.CmApiClient;
 import com.chenmeng.project.annotation.AuthCheck;
-import com.chenmeng.project.common.BaseResponse;
-import com.chenmeng.project.common.DeleteRequest;
-import com.chenmeng.project.common.ErrorCode;
-import com.chenmeng.project.common.ResultUtils;
+import com.chenmeng.project.common.*;
 import com.chenmeng.project.constant.CommonConstant;
 import com.chenmeng.project.exception.BusinessException;
 import com.chenmeng.project.model.dto.interfaceinfo.InterfaceInfoAddRequest;
@@ -14,6 +14,7 @@ import com.chenmeng.project.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import com.chenmeng.project.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import com.chenmeng.project.model.entity.InterfaceInfo;
 import com.chenmeng.project.model.entity.User;
+import com.chenmeng.project.model.enums.InterfaceInfoStatusEnum;
 import com.chenmeng.project.service.InterfaceInfoService;
 import com.chenmeng.project.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,8 +42,8 @@ public class InterfaceInfoController {
     @Resource
     private UserService userService;
 
-    //@Resource
-    //private CmApiClient cmApiClient;
+    @Resource
+    private CmApiClient cmApiClient;
 
     // region 增删改查
 
@@ -197,5 +198,106 @@ public class InterfaceInfoController {
         return ResultUtils.success(interfaceInfoPage);
     }
 
+    /**
+     * 发布接口
+     *
+     * @param idRequest  携带 id
+     * @return 是否发布接口成功
+     */
+    @PostMapping("/online")
+    @AuthCheck(mustRole = "admin")
+    public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest) {
+        // 参数 id 不能为空 或 小于 0
+        if (idRequest == null || idRequest.getId() < 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // 判断接口是否存在
+        Long id = idRequest.getId(); // 获取 requestId
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        // 判断接口能否使用
+        // TODO 根据测试地址来调用 ??
+        com.chenmeng.sdk.model.User user = new com.chenmeng.sdk.model.User();
+        user.setName("乔");
+        // 这里是先用了固定的方法来进行测试，后续改进
+        String name = cmApiClient.getNameByPostWithJson(user);
+        if (StringUtils.isBlank(name)) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口验证失败");
+        }
+        // 修改数据库接口状态 -- 仅本人或管理员可修改
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.ONLINE.getValue());
+        boolean isSuccessful = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(isSuccessful);
+    }
 
+    /**
+     * 下线接口
+     *
+     * @param idRequest 携带 id
+     * @return 是否下线接口成功
+     */
+    @PostMapping("/offline")
+    @AuthCheck(mustRole = "admin")
+    public BaseResponse<Boolean> offlineInterfaceInfo(@RequestBody IdRequest idRequest) {
+        // 参数 id 不能为空 或 小于 0
+        if (idRequest == null || idRequest.getId() < 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // 判断接口是否存在
+        Long id = idRequest.getId(); // 获取 requestId
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+
+        // 修改数据库接口状态 -- 仅本人或管理员可修改
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.OFFLINE.getValue());
+        boolean isSuccessful = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(isSuccessful);
+    }
+
+    /**
+     * 在线调用接口
+     *
+     * @param interfaceInfoInvokeRequest 调用接口请求
+     * @param request                请求
+     * @return {@link BaseResponse}<{@link Object}>
+     */
+    @PostMapping("/invoke")
+    public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest,
+                                                     HttpServletRequest request) {
+        // 1. 判断参数是否有误
+        if (interfaceInfoInvokeRequest == null || interfaceInfoInvokeRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // 2. 判断接口是否存在
+        Long id = interfaceInfoInvokeRequest.getId(); // 获取 id
+        InterfaceInfo interfaceInfo = interfaceInfoService.getById(id); // 获取接口对象
+        if (interfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        // 3. 判断接口是否上线
+        if (interfaceInfo.getStatus() != InterfaceInfoStatusEnum.ONLINE.getValue()) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_ERROR, "接口未上线");
+        }
+        // 4. 从数据库中查询当前登录用户的标识
+        User loginUser = userService.getLoginUser(request);
+        String accessKey = loginUser.getAccessKey();
+        String secretKey = loginUser.getSecretKey();
+        // 5. 获取模拟接口
+        CmApiClient client = new CmApiClient(accessKey, secretKey);
+        // 6.1 获取请求参数
+        String UserRequestParams = interfaceInfoInvokeRequest.getRequestParams();
+        // 6.2 json 数据转成 对象
+        com.chenmeng.sdk.model.User user = JSONUtil.toBean(UserRequestParams, com.chenmeng.sdk.model.User.class);
+        // 7. 调用接口方法
+        String result = client.getNameByPostWithJson(user);
+        return ResultUtils.success(result);
+    }
 }

@@ -3,8 +3,8 @@ package com.chenmeng.controller;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import com.chenmeng.model.User;
-import com.chenmeng.utils.SignUtil;
+import com.chenmeng.sdk.model.User;
+import com.chenmeng.sdk.utils.SignUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;

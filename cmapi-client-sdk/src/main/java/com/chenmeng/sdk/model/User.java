@@ -1,4 +1,4 @@
-package com.chenmeng.model;
+package com.chenmeng.sdk.model;
 
 import lombok.Data;
 

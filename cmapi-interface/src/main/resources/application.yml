@@ -4,6 +4,8 @@ server:
     context-path: /api
 
 chenmeng:
-  client:
-    access-key: 沉梦
-    secret-key: abc
+  api:
+    client:
+      access-key: 沉梦
+      secret-key: abc
+

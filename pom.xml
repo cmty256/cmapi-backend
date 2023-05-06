@@ -97,6 +97,13 @@
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
+        
+        <!--api sdk-->
+        <dependency>
+            <groupId>com.chenmeng</groupId>
+            <artifactId>cmapi-client-sdk</artifactId>
+            <version>0.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
