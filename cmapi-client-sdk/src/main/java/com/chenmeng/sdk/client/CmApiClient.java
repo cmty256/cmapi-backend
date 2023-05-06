@@ -1,4 +1,4 @@
-package com.chenmeng.client;
+package com.chenmeng.sdk.client;
 
 
 import cn.hutool.core.util.RandomUtil;
@@ -7,8 +7,8 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.chenmeng.model.User;
-import com.chenmeng.utils.SignUtil;
+import com.chenmeng.sdk.model.User;
+import com.chenmeng.sdk.utils.SignUtil;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package com.chenmeng;
 
-import com.chenmeng.client.CmApiClient;
+import com.chenmeng.sdk.client.CmApiClient;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan
 @Configuration
 //定义一个配置前缀
-@ConfigurationProperties(prefix = "chenmeng.client")
+@ConfigurationProperties(prefix = "chenmeng.api.client")
 public class CmApiClientConfig {
     private String accessKey;
     private String secretKey;

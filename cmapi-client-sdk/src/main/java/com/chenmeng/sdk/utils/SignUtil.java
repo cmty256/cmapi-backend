@@ -1,4 +1,4 @@
-package com.chenmeng.utils;
+package com.chenmeng.sdk.utils;
 
 import cn.hutool.crypto.digest.DigestUtil;
 
