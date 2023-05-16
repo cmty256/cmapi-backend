@@ -43,4 +43,13 @@ chenmeng:
     client:
       access-key: 沉梦
       secret-key: abc
+dubbo:
+  application:
+    name: dubbo-springboot-demo-provider
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848
 
