@@ -17,7 +17,6 @@ public class InterfaceInfoUpdateRequest implements Serializable {
     /**
      * 主键
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -60,5 +59,4 @@ public class InterfaceInfoUpdateRequest implements Serializable {
      */
     private String method;
 
-    private static final long serialVersionUID = 1L;
 }

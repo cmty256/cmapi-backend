@@ -20,7 +20,6 @@ public class InterfaceInfoQueryRequest extends PageRequest implements Serializab
     /**
      * 主键
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**

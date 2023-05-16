@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.chenmeng.project.model.entity.InterfaceInfo;
 
 /**
-* @author 乔
+* @author 沉梦
 * @description 针对表【interface_info(接口信息)】的数据库操作Service
 * @createDate 2023-04-23 10:58:17
 */
