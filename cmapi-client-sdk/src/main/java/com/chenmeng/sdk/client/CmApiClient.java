@@ -20,6 +20,9 @@ import java.util.Map;
  */
 public class CmApiClient {
 
+    // 网关 IP 前缀
+    private static final String GATEWAY_HOST = "http://localhost:8090";
+
     private final String accessKey;
 
     private final String secretKey;
@@ -32,19 +35,19 @@ public class CmApiClient {
 
     public String getNameByGet(String name) {
         //RESTful 风格
-        return HttpUtil.get("http://localhost:8123/api/name/" + name);
+        return HttpUtil.get(GATEWAY_HOST + "/api/name/" + name);
     }
 
     public String getNameByPost(String name) {
         // 可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
-        return HttpUtil.post("http://localhost:8123/api/name/", paramMap);
+        return HttpUtil.post(GATEWAY_HOST + "/api/name/", paramMap);
     }
 
     public String getNameByPostWithJson(User user) {
         String json = JSONUtil.toJsonStr(user);
-        HttpResponse response = HttpRequest.post("http://localhost:8123/api/name/user")
+        HttpResponse response = HttpRequest.post(GATEWAY_HOST + "/api/name/user")
                 .addHeaders(getHeaders(json))
                 .body(json)
                 .execute();

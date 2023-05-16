@@ -78,6 +78,7 @@ public class InterfaceInfo implements Serializable {
      * 是否删除(0-未删, 1-已删)
      * @TableLogic: 逻辑删除注解，不是真的删除
      */
+    @TableLogic
     private Integer isDeleted;
 
     @TableField(exist = false)
