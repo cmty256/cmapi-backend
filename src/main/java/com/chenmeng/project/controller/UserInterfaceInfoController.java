@@ -2,6 +2,8 @@ package com.chenmeng.project.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.chenmeng.cmapicommon.model.entity.User;
+import com.chenmeng.cmapicommon.model.entity.UserInterfaceInfo;
 import com.chenmeng.project.annotation.AuthCheck;
 import com.chenmeng.project.common.*;
 import com.chenmeng.project.constant.CommonConstant;
@@ -10,8 +12,6 @@ import com.chenmeng.project.exception.BusinessException;
 import com.chenmeng.project.model.dto.userInterfaceInfo.UserInterfaceInfoAddRequest;
 import com.chenmeng.project.model.dto.userInterfaceInfo.UserInterfaceInfoQueryRequest;
 import com.chenmeng.project.model.dto.userInterfaceInfo.UserInterfaceInfoUpdateRequest;
-import com.chenmeng.project.model.entity.User;
-import com.chenmeng.project.model.entity.UserInterfaceInfo;
 import com.chenmeng.project.service.UserInterfaceInfoService;
 import com.chenmeng.project.service.UserService;
 import lombok.extern.slf4j.Slf4j;

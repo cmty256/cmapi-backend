@@ -1,10 +1,10 @@
 package com.chenmeng.project.aop;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.chenmeng.cmapicommon.model.entity.User;
 import com.chenmeng.project.annotation.AuthCheck;
 import com.chenmeng.project.common.ErrorCode;
 import com.chenmeng.project.exception.BusinessException;
-import com.chenmeng.project.model.entity.User;
 import com.chenmeng.project.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;

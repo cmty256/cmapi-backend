@@ -1,6 +1,6 @@
 package com.chenmeng.project.service;
 
-import com.chenmeng.project.model.entity.User;
+import com.chenmeng.cmapicommon.model.entity.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

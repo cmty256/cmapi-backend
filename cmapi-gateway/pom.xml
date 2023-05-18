@@ -33,6 +33,12 @@
             <artifactId>cmapi-client-sdk</artifactId>
             <version>0.0.1</version>
         </dependency>
+        <!--抽象公共服务项目-->
+        <dependency>
+            <groupId>com.chenmeng</groupId>
+            <artifactId>cmapi-common</artifactId>
+            <version>0.0.1</version>
+        </dependency>
         <!--Dubbo-->
         <dependency>
             <groupId>org.apache.dubbo</groupId>
