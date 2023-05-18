@@ -1,7 +1,7 @@
 package com.chenmeng.project.service;
 
-import com.chenmeng.project.model.entity.UserInterfaceInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.chenmeng.cmapicommon.model.entity.UserInterfaceInfo;
 
 /**
 * @author 沉梦

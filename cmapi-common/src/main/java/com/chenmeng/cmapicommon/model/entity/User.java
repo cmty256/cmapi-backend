@@ -1,21 +1,23 @@
-package com.chenmeng.project.model.vo;
+package com.chenmeng.cmapicommon.model.entity;
 
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户视图
+ * 用户
  *
- * @author 沉梦
  * @TableName user
  */
+@TableName(value = "user")
 @Data
-public class UserVO implements Serializable {
+public class User implements Serializable {
     /**
      * id
      */
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -44,6 +46,21 @@ public class UserVO implements Serializable {
     private String userRole;
 
     /**
+     * 密码
+     */
+    private String userPassword;
+
+    /**
+     * 标识
+     */
+    private String accessKey;
+
+    /**
+     * 密钥
+     */
+    private String secretKey;
+
+    /**
      * 创建时间
      */
     private Date createTime;
@@ -53,5 +70,12 @@ public class UserVO implements Serializable {
      */
     private Date updateTime;
 
+    /**
+     * 是否删除
+     */
+    @TableLogic
+    private Integer isDelete;
+
+    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

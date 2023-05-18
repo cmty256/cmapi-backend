@@ -3,8 +3,14 @@ package com.chenmeng.cmapigateway;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import com.chenmeng.cmapicommon.model.entity.InterfaceInfo;
+import com.chenmeng.cmapicommon.model.entity.User;
+import com.chenmeng.cmapicommon.service.InnerInterfaceInfoService;
+import com.chenmeng.cmapicommon.service.InnerUserInterfaceInfoService;
+import com.chenmeng.cmapicommon.service.InnerUserService;
 import com.chenmeng.sdk.utils.SignUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -36,7 +42,16 @@ import java.util.Objects;
 @Component
 public class CustomGlobalFilter implements GlobalFilter, Ordered {
 
-    // 模拟接口的 IP 前缀
+    @DubboReference
+    private InnerUserService innerUserService;
+
+    @DubboReference
+    private InnerInterfaceInfoService innerInterfaceInfoService;
+
+    @DubboReference
+    private InnerUserInterfaceInfoService innerUserInterfaceInfoService;
+
+    // 模拟接口的 IP 前缀 -- private static final -- 快捷键 prsf
     private static final String INTERFACE_HOST = "http://localhost:8123";
     // 允许通过的请求 IP 前缀
     private static final List<String> IP_WHITE_LIST = Arrays.asList("127.0.0.1","127.0.0.2");
@@ -83,8 +98,17 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         if (hasBlank) {
             return handleInvokeError(response);
         }
-        // todo 3.3.1 使用 accessKey 去数据库查询 secretKey
-        String secretKey = "abc";
+        // 3.3.1 使用 accessKey 去数据库查询 secretKey
+        User invokeUser = null;
+        try {
+            invokeUser = innerUserService.getInvokeUser(accessKey);
+        } catch (Exception e) {
+            log.error("getInvokeUser error", e);
+        }
+        if (invokeUser == null) {
+            return handleInvokeError(response);
+        }
+        String secretKey = invokeUser.getSecretKey();
         // 3.3.2 检查签名是否合法
         String sign1 = SignUtil.getSign(body, secretKey);
         if (!StrUtil.equals(sign, sign1)) {
@@ -101,9 +125,20 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             return handleInvokeError(response);
         }
         // 4. 请求的模拟接口是否存在？
-        // 5. 请求转发，调用模拟接口
-        // 6. 响应日志
-        return handleResponse(exchange,chain);
+        InterfaceInfo invokeInterfaceInfo = null;
+        try {
+            invokeInterfaceInfo = innerInterfaceInfoService.getInterfaceInfo(path, method);
+        } catch (Exception e) {
+            log.error("getInvokeInterfaceInfo error", e);
+        }
+        if (invokeInterfaceInfo == null) {
+            return handleInvokeError(response);
+        }
+        // todo 4.2 检查是否还有调用次数
+        // if (!innerUserInterfaceInfoService)
+
+        // 5. 请求转发，调用模拟接口 + 响应日志
+        return handleResponse(exchange, chain, invokeUser.getId(), invokeInterfaceInfo.getId());
     }
 
     @Override
@@ -118,7 +153,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
      * @param chain
      * @return
      */
-    private Mono<Void> handleResponse(ServerWebExchange exchange, GatewayFilterChain chain) {
+    private Mono<Void> handleResponse(ServerWebExchange exchange, GatewayFilterChain chain, long userId, long interfaceInfoId) {
         try {
             // 从交换机拿到原始response
             ServerHttpResponse originalResponse = exchange.getResponse();
@@ -141,7 +176,12 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                             // 往返回值里面写数据，给前端
                             // 拼接字符串
                             return super.writeWith(fluxBody.map(dataBuffer -> {
-                                // TODO 7. 调用成功，接口调用次数+1
+                                // 7. 调用成功，接口调用次数+1
+                                try {
+                                    innerUserInterfaceInfoService.invokeInterfaceCount(userId, interfaceInfoId);
+                                } catch (Exception e) {
+                                    log.error("invokeInterfaceCount error", e);
+                                }
                                 // data从这个content中读取
                                 byte[] content = new byte[dataBuffer.readableByteCount()];
                                 dataBuffer.read(content);

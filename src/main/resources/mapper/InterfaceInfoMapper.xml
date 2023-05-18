@@ -5,7 +5,7 @@
 <mapper namespace="com.chenmeng.project.mapper.InterfaceInfoMapper">
 
     <!--表示结果集,id表示结果集名称  type表示结果集的类型-->
-    <resultMap id="InterfaceResultMap" type="com.chenmeng.project.model.entity.InterfaceInfo">
+    <resultMap id="InterfaceResultMap" type="com.chenmeng.cmapicommon.model.entity.InterfaceInfo">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="description" column="description" jdbcType="VARCHAR"/>

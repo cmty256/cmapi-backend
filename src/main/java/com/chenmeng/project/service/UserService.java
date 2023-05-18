@@ -2,7 +2,7 @@ package com.chenmeng.project.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.chenmeng.project.model.entity.User;
+import com.chenmeng.cmapicommon.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 
