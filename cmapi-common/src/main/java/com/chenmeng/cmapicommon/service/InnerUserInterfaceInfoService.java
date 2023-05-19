@@ -16,4 +16,13 @@ public interface InnerUserInterfaceInfoService {
      * @return boolean
      */
     boolean invokeInterfaceCount(Long userId, Long interfaceInfoId);
+
+    /**
+     * 是否还有调用次数
+     *
+     * @param userId          用户id
+     * @param interfaceInfoId 接口id
+     * @return boolean
+     */
+    boolean hasInvokeNum(long userId, long interfaceInfoId);
 }
