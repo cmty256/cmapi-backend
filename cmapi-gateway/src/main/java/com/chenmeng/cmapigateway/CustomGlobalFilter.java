@@ -134,9 +134,11 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         if (invokeInterfaceInfo == null) {
             return handleInvokeError(response);
         }
-        // todo 4.2 检查是否还有调用次数
-        // if (!innerUserInterfaceInfoService)
-
+        // todo 4.2 检查是否还有调用次数 -- 已解决
+        if (!innerUserInterfaceInfoService.hasInvokeNum(invokeUser.getId(), invokeInterfaceInfo.getId())) {
+            log.error("当前剩余调用次数为 0");
+            return handleInvokeError(response);
+        }
         // 5. 请求转发，调用模拟接口 + 响应日志
         return handleResponse(exchange, chain, invokeUser.getId(), invokeInterfaceInfo.getId());
     }
