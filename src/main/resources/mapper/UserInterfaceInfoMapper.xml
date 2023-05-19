@@ -6,31 +6,31 @@
 
     <resultMap id="BaseResultMap" type="com.chenmeng.cmapicommon.model.entity.UserInterfaceInfo">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="userId" jdbcType="BIGINT"/>
-            <result property="interfaceInfoId" column="interfaceInfoId" jdbcType="BIGINT"/>
-            <result property="totalNum" column="totalNum" jdbcType="INTEGER"/>
-            <result property="leftNum" column="leftNum" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="interfaceInfoId" column="interfaceInfo_id" jdbcType="BIGINT"/>
+            <result property="totalNum" column="total_num" jdbcType="INTEGER"/>
+            <result property="leftNum" column="left_num" jdbcType="INTEGER"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
-            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,userId,interfaceInfoId,
-        totalNum,leftNum,status,
-        createTime,updateTime,isDelete
+        id,user_id,interfaceInfo_id,
+        total_num,left_num,status,
+        create_time,update_time,is_deleted
     </sql>
     <select id="listTopInvokeInterfaceInfo" resultType="com.chenmeng.project.model.vo.InterfaceInfoVO">
         SELECT
-            interfaceInfoId AS id,
-            SUM( totalNum ) AS invokeNum
+            interfaceInfo_id AS id,
+            SUM( total_num ) AS invoke_num
         FROM
             user_interface_info
         GROUP BY
-            interfaceInfoId
+            interfaceInfo_id
         ORDER BY
-            invokeNum DESC
+            invoke_num DESC
             LIMIT #{limit}
     </select>
 </mapper>
