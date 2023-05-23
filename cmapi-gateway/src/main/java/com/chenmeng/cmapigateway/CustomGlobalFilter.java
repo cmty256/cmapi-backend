@@ -92,7 +92,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         String sign = headers.getFirst("sign");
         // 防止中文乱码，解码处理
         String body = URLUtil.decode(headers.getFirst("body"));
-        // log.info("请求的参数1：" + body);
+        log.info("请求的参数1：" + body);
         // 3.2 判断是否有空参
         boolean hasBlank = StrUtil.hasBlank(accessKey, nonce, timestamp, sign, body);
         if (hasBlank) {
