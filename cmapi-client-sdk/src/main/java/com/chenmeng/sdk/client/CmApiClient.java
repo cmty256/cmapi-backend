@@ -23,6 +23,8 @@ public class CmApiClient {
     // 网关 IP 前缀
     private static final String GATEWAY_HOST = "http://localhost:8090";
 
+    private static final String INTERFACE_HOST = "http://localhost:8123";
+
     private final String accessKey;
 
     private final String secretKey;
@@ -57,6 +59,19 @@ public class CmApiClient {
             return response.body();
         }
         return "fail";
+    }
+
+    public String getByTest(User user) {
+        if ("getNameByGet".equals(user.getInterfaceName())) {
+            return getNameByGet(user.getName());
+        }
+        if ("getNameByPost".equals(user.getInterfaceName())) {
+            return getNameByPost(user.getName());
+        }
+        if ("getNameByPostWithJson".equals(user.getInterfaceName())) {
+            return getNameByPostWithJson(user);
+        }
+        return "测试调用失败";
     }
 
     private Map<String, String> getHeaders(String body) {

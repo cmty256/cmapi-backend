@@ -297,7 +297,7 @@ public class InterfaceInfoController {
         // 6.2 json 数据转成 对象
         com.chenmeng.sdk.model.User user = JSONUtil.toBean(UserRequestParams, com.chenmeng.sdk.model.User.class);
         // 7. 调用接口方法
-        String result = client.getNameByPostWithJson(user);
+        String result = client.getByTest(user);
         return ResultUtils.success(result);
     }
 }

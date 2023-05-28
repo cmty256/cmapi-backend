@@ -17,6 +17,7 @@ public class InterfaceInfoInvokeRequest implements Serializable {
      */
     private Long id;
 
+    private String interfaceName;
     /**
      * 请求参数
      */

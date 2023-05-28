@@ -94,10 +94,10 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         String body = URLUtil.decode(headers.getFirst("body"));
         log.info("请求的参数1：" + body);
         // 3.2 判断是否有空参
-        boolean hasBlank = StrUtil.hasBlank(accessKey, nonce, timestamp, sign, body);
-        if (hasBlank) {
-            return handleInvokeError(response);
-        }
+        // boolean hasBlank = StrUtil.hasBlank(accessKey, nonce, timestamp, sign, body);
+        // if (hasBlank) {
+        //     return handleInvokeError(response);
+        // }
         // 3.3.1 使用 accessKey 去数据库查询 secretKey
         User invokeUser = null;
         try {

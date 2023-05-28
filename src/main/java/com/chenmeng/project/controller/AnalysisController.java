@@ -34,7 +34,7 @@ public class AnalysisController {
     @GetMapping("/top/interface/invoke")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<List<InterfaceInfoVO>> listTopInvokeInterfaceInfo() {
-        List<InterfaceInfoVO> listTopInvokeInterfaceInfo = analysisService.listTopInvokeInterfaceInfo(3);
+        List<InterfaceInfoVO> listTopInvokeInterfaceInfo = analysisService.listTopInvokeInterfaceInfo(5);
         return ResultUtils.success(listTopInvokeInterfaceInfo);
     }
 }
