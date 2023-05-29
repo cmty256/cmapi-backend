@@ -28,7 +28,7 @@
         FROM
             user_interface_info
         GROUP BY
-            interfaceInfo_id
+            interface_info_id
         ORDER BY
             invoke_num DESC
             LIMIT #{limit}

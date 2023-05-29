@@ -49,7 +49,7 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
         updateWrapper.eq(UserInterfaceInfo::getUserId, userId)
                 .eq(UserInterfaceInfo::getInterfaceInfoId, interfaceInfoId)
                 .gt(UserInterfaceInfo::getLeftNum, 0) // 剩余调用次数大于 0
-                .setSql("leftNum = leftNum - 1,totalNum = totalNum + 1");
+                .setSql("left_num = left_num - 1,total_num = total_num + 1");
         // TODO 添加事务添加锁
         return update(updateWrapper);
     }
