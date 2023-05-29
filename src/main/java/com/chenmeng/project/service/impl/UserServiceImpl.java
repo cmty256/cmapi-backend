@@ -41,9 +41,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private static final String SALT = "chenmeng";
 
     @Override
-    public long userRegister(String userAccount, String userPassword, String checkPassword) {
+    public long userRegister(String userAccount, String email, String phone, String userPassword, String checkPassword) {
         // 1. 校验
-        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
+        if (StringUtils.isAnyBlank(userAccount, email, phone, userPassword, checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
         if (userAccount.length() < 4) {
@@ -55,6 +55,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 密码和校验密码相同
         if (!userPassword.equals(checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "两次输入的密码不一致");
+        }
+        // 校验手机号码 -- 手机号码为 11 位数字，以 1 开头
+        if (!phone.matches("^1[3-9]\\d{9}$")) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "手机号码格式不正确");
+        }
+        // 校验邮箱 -- xxx@qq.com
+        // 邮箱格式为 用户名@域名 的形式，域名必须包含一个"."，且"."后面必须跟着两个或三个字母，如".com"、".cn"等。
+        if (!email.matches("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$")) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "邮箱格式不正确");
         }
         synchronized (userAccount.intern()) {
             // 账户不能重复
@@ -72,6 +81,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             // 4. 插入数据
             User user = new User();
             user.setUserAccount(userAccount);
+            user.setEmail(email);
+            user.setPhone(phone);
             user.setUserPassword(encryptPassword);
             user.setAccessKey(accessKey);
             user.setSecretKey(secretKey);
