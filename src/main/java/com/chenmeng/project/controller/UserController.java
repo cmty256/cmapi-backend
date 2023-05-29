@@ -236,7 +236,12 @@ public class UserController {
         return ResultUtils.success(userVOPage);
     }
 
-    // endregion
+    /**
+     * 用户密码找回
+     *
+     * @param userPasswBackRequest 用户密码找回请求体
+     * @return {@code BaseResponse<Long>}
+     */// endregion
     @PostMapping("/passwordBack")
     public BaseResponse<Long> passwordBack(@RequestBody UserPasswBackRequest userPasswBackRequest) {
         if (userPasswBackRequest == null) {
