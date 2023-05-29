@@ -84,6 +84,42 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
+    public long passwordBack(String userAccount, String email, String newPassword, String checkPassword) {
+        // 1. 校验
+        if (StringUtils.isAnyBlank(userAccount, email, newPassword, checkPassword)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
+        }
+        if (userAccount.length() < 4) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户账号过短");
+        }
+        if (newPassword.length() < 8 || checkPassword.length() < 8) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户密码过短");
+        }
+        // 密码和校验密码相同
+        if (!newPassword.equals(checkPassword)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "两次输入的密码不一致");
+        }
+        // 2. 根据用户账号和邮箱查询用户
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_account", userAccount).eq("email", email);
+        User user = this.getOne(wrapper);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或邮箱不正确");
+        }
+        synchronized (userAccount.intern()) {
+            // 3. 加密
+            String encryptPassword = DigestUtils.md5DigestAsHex((SALT + newPassword).getBytes());
+            // 4. 更新数据
+            user.setUserPassword(encryptPassword);
+            boolean result = this.updateById(user);
+            if (!result) {
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "密码找回失败，数据库错误");
+            }
+            return user.getId();
+        }
+    }
+
+    @Override
     public User userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {

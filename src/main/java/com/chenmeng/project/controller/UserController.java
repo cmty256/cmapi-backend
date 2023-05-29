@@ -237,4 +237,19 @@ public class UserController {
     }
 
     // endregion
+    @PostMapping("/passwordBack")
+    public BaseResponse<Long> passwordBack(@RequestBody UserPasswBackRequest userPasswBackRequest) {
+        if (userPasswBackRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        String userAccount = userPasswBackRequest.getUserAccount();
+        String email = userPasswBackRequest.getEmail();
+        String userPassword = userPasswBackRequest.getNewPassword();
+        String checkPassword = userPasswBackRequest.getCheckPassword();
+        if (StringUtils.isAnyBlank(userAccount, email, userPassword, checkPassword)) {
+            return null;
+        }
+        long result = userService.passwordBack(userAccount, email, userPassword, checkPassword);
+        return ResultUtils.success(result);
+    }
 }
