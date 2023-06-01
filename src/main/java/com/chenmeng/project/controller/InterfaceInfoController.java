@@ -17,6 +17,7 @@ import com.chenmeng.project.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import com.chenmeng.project.model.enums.InterfaceInfoStatusEnum;
 import com.chenmeng.project.service.InterfaceInfoService;
 import com.chenmeng.project.service.UserService;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -220,7 +223,7 @@ public class InterfaceInfoController {
         // 判断接口能否使用
         // TODO 根据测试地址来调用 ??
         com.chenmeng.sdk.model.User user = new com.chenmeng.sdk.model.User();
-        user.setName("乔");
+        user.setName("invoke");
         // 这里是先用了固定的方法来进行测试，后续改进
         String name = cmApiClient.getNameByPostWithJson(user);
         if (StringUtils.isBlank(name)) {
@@ -288,16 +291,56 @@ public class InterfaceInfoController {
         }
         // 4. 从数据库中查询当前登录用户的标识
         User loginUser = userService.getLoginUser(request);
+        if (loginUser == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
         String accessKey = loginUser.getAccessKey();
         String secretKey = loginUser.getSecretKey();
         // 5. 获取模拟接口
         CmApiClient client = new CmApiClient(accessKey, secretKey);
-        // 6.1 获取请求参数
-        String UserRequestParams = interfaceInfoInvokeRequest.getRequestParams();
-        // 6.2 json 数据转成 对象
-        com.chenmeng.sdk.model.User user = JSONUtil.toBean(UserRequestParams, com.chenmeng.sdk.model.User.class);
-        // 7. 调用接口方法
-        String result = client.getNameByPostWithJson(user);
+        // // 6.1 获取请求参数
+        // String UserRequestParams = interfaceInfoInvokeRequest.getRequestParams();
+        // // 6.2 json 数据转成 对象
+        // com.chenmeng.sdk.model.User user = JSONUtil.toBean(UserRequestParams, com.chenmeng.sdk.model.User.class);
+        // // 7. 调用接口方法
+        // String result = client.getNameByPostWithJson(user);
+
+        Object result = reflectionInterface(CmApiClient.class, interfaceInfo.getName(), interfaceInfoInvokeRequest.getRequestParams(), accessKey, secretKey);
         return ResultUtils.success(result);
     }
+
+    public Object reflectionInterface(Class<?> reflectionClass, String methodName, String parameter, String accessKey, String secretKey) {
+        //构造反射类的实例
+        Object result = null;
+        try {
+            Constructor<?> constructor = reflectionClass.getDeclaredConstructor(String.class, String.class);
+            //获取SDK的实例，同时传入密钥
+            CmApiClient tempClient = (CmApiClient) constructor.newInstance(accessKey, secretKey);
+            //获取SDK中所有的方法
+            Method[] methods = tempClient.getClass().getMethods();
+            //筛选出调用方法
+            for (Method method : methods
+            ) {
+                if (method.getName().equals(methodName)) {
+                    //获取方法参数类型
+                    Class<?>[] parameterTypes = method.getParameterTypes();
+                    Method method1;
+                    if (parameterTypes.length == 0){
+                        method1 = tempClient.getClass().getMethod(methodName);
+                        return method1.invoke(tempClient);
+                    }
+                    method1 = tempClient.getClass().getMethod(methodName, parameterTypes[0]);
+                    //getMethod，多参会考虑重载情况获取方法,前端传来参数是JSON格式转换为String类型
+                    //参数Josn化
+                    Gson gson = new Gson();
+                    Object args = gson.fromJson(parameter, parameterTypes[0]);
+                    return result = method1.invoke(tempClient, args);
+                }
+            }
+        } catch (Exception e) {
+            log.error("反射调用参数错误",e);
+        }
+        return result;
+    }
+
 }

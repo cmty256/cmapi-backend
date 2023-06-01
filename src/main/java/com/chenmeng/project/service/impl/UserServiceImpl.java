@@ -78,6 +78,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             // 3. 给新用户分配 accessKey、secretKey
             String accessKey = DigestUtil.md5Hex(SALT + userAccount + RandomUtil.randomNumbers(4));
             String secretKey = DigestUtil.md5Hex(SALT + userAccount + RandomUtil.randomNumbers(8));
+            // todo 注册时给用户分配调用接口的次数
             // 4. 插入数据
             User user = new User();
             user.setUserAccount(userAccount);

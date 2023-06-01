@@ -67,7 +67,8 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         // 1. 请求日志
         ServerHttpRequest request = exchange.getRequest();
-        String path = INTERFACE_HOST + request.getPath().value();
+        // String path = INTERFACE_HOST + request.getPath().value();
+        String path = request.getPath().value();
         String method = Objects.requireNonNull(request.getMethod()).toString();
         log.info("请求的唯一标识：" + request.getId());
         log.info("请求的路径：" + path);
@@ -94,10 +95,10 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         String body = URLUtil.decode(headers.getFirst("body"));
         log.info("请求的参数1：" + body);
         // 3.2 判断是否有空参
-        boolean hasBlank = StrUtil.hasBlank(accessKey, nonce, timestamp, sign, body);
-        if (hasBlank) {
-            return handleInvokeError(response);
-        }
+        // boolean hasBlank = StrUtil.hasBlank(accessKey, nonce, timestamp, sign, body);
+        // if (hasBlank) {
+        //     return handleInvokeError(response);
+        // }
         // 3.3.1 使用 accessKey 去数据库查询 secretKey
         User invokeUser = null;
         try {

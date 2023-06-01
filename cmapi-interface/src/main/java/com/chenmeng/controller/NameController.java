@@ -1,10 +1,9 @@
 package com.chenmeng.controller;
 
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.http.HttpUtil;
+import org.apache.commons.lang3.StringUtils;
 import com.chenmeng.sdk.model.User;
-import com.chenmeng.sdk.utils.SignUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 @RestController
-@RequestMapping("/name")
+@RequestMapping("/invoke")
 public class NameController {
 
     @GetMapping("/{name}")
@@ -26,14 +25,77 @@ public class NameController {
         return "发送GET请求 你的名字是：" + name;
     }
 
-    @PostMapping("/")
+    @PostMapping("/po")
     public String getNameByPost(@RequestParam(value = "name") String name) {
         return "发送POST请求 你的名字是：" + name;
     }
 
     @PostMapping("/user")
     public String getNameByPostWithJson(@RequestBody User user, HttpServletRequest request) {
-        return "发送POST请求 JSON中你的名字是：" + user.getName();
+        return "获取的用户名称是：" + user.getName();
     }
 
+    @GetMapping("/poetry")
+    public String getPoetry(HttpServletRequest request){
+
+        String result = HttpUtil.get("https://api.apiopen.top/api/sentences"
+                , CharsetUtil.CHARSET_UTF_8);
+
+        if (StringUtils.isBlank(result)){
+            return "此接口发生了意外55！！";
+        }
+
+        return result;
+    }
+
+    /**
+     * 获取 NBA 赛事
+     *
+     * @param request 请求
+     * @return {@code String}
+     */
+    @GetMapping("/nbaEvent")
+    public String getNBAEvent(HttpServletRequest request){
+
+        String result = HttpUtil.get("https://www.juhe.cn/docs/api/id/92"
+                , CharsetUtil.CHARSET_UTF_8);
+
+        if (StringUtils.isBlank(result)){
+            return "此接口发生了意外55！！";
+        }
+
+        return result;
+    }
+
+    /**
+     * 获取当前时间
+     *
+     * @param request 请求
+     * @return {@code String}
+     */
+    @GetMapping("/currentTime")
+    public String getCurrentTime(HttpServletRequest request){
+
+        String result = HttpUtil.get("https://api.apiopen.top/api/getTime"
+                , CharsetUtil.CHARSET_UTF_8);
+
+        if (StringUtils.isBlank(result)){
+            return "此接口发生了意外55！！";
+        }
+
+        return result;
+    }
+
+    @GetMapping("/saying")
+    public String getSaying(HttpServletRequest request){
+
+        String result = HttpUtil.get("https://api.apiopen.top/api/sentences"
+                , CharsetUtil.CHARSET_UTF_8);
+
+        if (StringUtils.isBlank(result)){
+            return "此接口发生了意外55！！";
+        }
+
+        return result;
+    }
 }
