@@ -225,7 +225,7 @@ public class InterfaceInfoController {
         com.chenmeng.sdk.model.User user = new com.chenmeng.sdk.model.User();
         user.setName("invoke");
         // 这里是先用了固定的方法来进行测试，后续改进
-        String name = cmApiClient.getNameByPostWithJson(user);
+        String name = cmApiClient.getNameByUser(user);
         if (StringUtils.isBlank(name)) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口验证失败");
         }
@@ -303,7 +303,7 @@ public class InterfaceInfoController {
         // // 6.2 json 数据转成 对象
         // com.chenmeng.sdk.model.User user = JSONUtil.toBean(UserRequestParams, com.chenmeng.sdk.model.User.class);
         // // 7. 调用接口方法
-        // String result = client.getNameByPostWithJson(user);
+        // String result = client.getNameByUser(user);
 
         Object result = reflectionInterface(CmApiClient.class, interfaceInfo.getName(), interfaceInfoInvokeRequest.getRequestParams(), accessKey, secretKey);
         return ResultUtils.success(result);

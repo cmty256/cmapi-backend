@@ -26,7 +26,7 @@ class CmapiInterfaceApplicationTests {
         String result2 = cmApiClient.getNameByPost("听雨");
         User user = new User();
         user.setName("沉梦听雨");
-        String result3 = cmApiClient.getNameByPostWithJson(user);
+        String result3 = cmApiClient.getNameByUser(user);
         System.out.println(result1);
         System.out.println("------");
         System.out.println(result2);
@@ -38,7 +38,7 @@ class CmapiInterfaceApplicationTests {
     void testApiClient2() {
         User user = new User();
         user.setName("沉梦听雨");
-        String result3 = cmApiClient.getNameByPostWithJson(user);
+        String result3 = cmApiClient.getNameByUser(user);
         System.out.println(result3);
     }
 

@@ -45,7 +45,7 @@ public class CmApiClient {
         return HttpUtil.post(GATEWAY_HOST + "/api/invoke/", paramMap);
     }
 
-    public String getNameByPostWithJson(User user) {
+    public String getNameByUser(User user) {
         String json = JSONUtil.toJsonStr(user);
         HttpResponse response = HttpRequest.post(GATEWAY_HOST + "/api/invoke/user")
                 .addHeaders(getHeaders(json))
