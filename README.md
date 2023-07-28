@@ -1,28 +1,12 @@
-# SpringBoot 项目初始模板
+## 项目搭建
 
-> by [程序员鱼皮知识星球](https://chenmeng.icu)
+后端采用自己搭建的 Spring Boot 项目模板快速构建初始 web 项目；前端采用 Ant Design Pro 脚手架进行搭建。
 
-Java SpringBoot 项目初始模板，整合了常用框架和示例代码，大家可以在此基础上快速开发自己的项目。
+SpringBoot 项目初始化模板：[https://gitee.com/dream-deeply-tyu/easy-web](https://gitee.com/dream-deeply-tyu/easy-web)
 
-## 模板功能
+前端代码仓库地址：[https://gitee.com/dream-deeply-tyu/cmapi-frontend](https://gitee.com/dream-deeply-tyu/cmapi-frontend)
 
-- Spring Boot 2.7.0（贼新）
-- Spring MVC
-- MySQL 驱动
-- MyBatis
-- MyBatis Plus
-- Spring Session Redis 分布式登录
-- Spring AOP
-- Apache Commons Lang3 工具类
-- Lombok 注解
-- Swagger + Knife4j 接口文档
-- Spring Boot 调试工具和项目处理器
-- 全局请求响应拦截器（记录日志）
-- 全局异常处理器
-- 自定义错误码
-- 封装通用响应类
-- 示例用户注册、登录、搜索功能
-- 示例单元测试类
-- 示例 SQL（用户表）
+## 项目架构图
 
-访问 localhost:7529/api/doc.html 就能在线调试接口了，不需要前端配合啦~
+![image-20230424200930707](https://cdn.jsdelivr.net/gh/cmty256/imgs-blog@main/images/image-20230424200930707.png)
+
