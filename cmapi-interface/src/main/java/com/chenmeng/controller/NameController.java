@@ -2,6 +2,8 @@ package com.chenmeng.controller;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
+import com.chenmeng.sdk.model.RequestParams;
 import org.apache.commons.lang3.StringUtils;
 import com.chenmeng.sdk.model.User;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +37,11 @@ public class NameController {
         return "获取的用户名称是：" + user.getName();
     }
 
+    /**
+     * 随机一句诗歌
+     * @param request
+     * @return
+     */
     @GetMapping("/poetry")
     public String getPoetry(HttpServletRequest request){
 
@@ -86,6 +93,11 @@ public class NameController {
         return result;
     }
 
+    /**
+     * 随机一言
+     * @param request
+     * @return
+     */
     @GetMapping("/saying")
     public String getSaying(HttpServletRequest request){
 
@@ -98,4 +110,22 @@ public class NameController {
 
         return result;
     }
+
+    /**
+     * 抖音无水印解析：https://api.aagtool.top/api/dywsyjx
+     * @param req
+     * @param request
+     * @return
+     */
+    @PostMapping("/dou")
+    public String getDouYinUrl(@RequestBody RequestParams req, HttpServletRequest request) {
+
+        String result = HttpUtil.get("https://api.aagtool.top/api/dywsyjx?url=" + req.getUrl());
+
+        if (StringUtils.isBlank(result)){
+            return "解析失败！！";
+        }
+        return result;
+    }
+
 }
