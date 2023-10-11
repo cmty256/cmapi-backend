@@ -7,6 +7,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
+import com.chenmeng.sdk.model.RequestParams;
 import com.chenmeng.sdk.model.User;
 import com.chenmeng.sdk.utils.SignUtil;
 
@@ -22,6 +23,8 @@ public class CmApiClient {
 
     // 网关 IP 前缀
     private static final String GATEWAY_HOST = "http://localhost:8090";
+    // 服务器 IP 地址
+    // private static final String GATEWAY_HOST = "http://192.168.194.133:8090";
 
     private final String accessKey;
 
@@ -119,6 +122,27 @@ public class CmApiClient {
 
         System.out.println(request);
         return request;
+
+    }
+
+    /**
+     * 抖音无水印解析：https://api.aagtool.top/api/dywsyjx
+     * @param req
+     * @return
+     */
+    public String getDouYinUrl(RequestParams req) {
+
+        String json = JSONUtil.toJsonStr(req);
+        HttpResponse response = HttpRequest.post(GATEWAY_HOST + "/api/invoke/dou")
+                .addHeaders(getHeaders(json))
+                .body(json)
+                .execute();
+        System.out.println("response = " + response);
+        System.out.println("status = " + response.getStatus());
+        if (response.isOk()) {
+            return response.body();
+        }
+        return "fail";
 
     }
 

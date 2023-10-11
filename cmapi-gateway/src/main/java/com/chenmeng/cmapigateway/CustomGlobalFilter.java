@@ -53,8 +53,9 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
 
     // 模拟接口的 IP 前缀 -- private static final -- 快捷键 prsf
     private static final String INTERFACE_HOST = "http://localhost:8123";
+    // private static final String INTERFACE_HOST = "http://192.168.194.133:8123"; // 服务器地址
     // 允许通过的请求 IP 前缀
-    private static final List<String> IP_WHITE_LIST = Arrays.asList("127.0.0.1","127.0.0.2");
+    private static final List<String> IP_WHITE_LIST = Arrays.asList("127.0.0.1","127.0.0.2","192.168.194.133");
 
     /**
      * 过滤器

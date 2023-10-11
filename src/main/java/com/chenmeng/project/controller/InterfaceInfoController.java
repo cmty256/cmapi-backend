@@ -27,7 +27,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * API 接口信息
@@ -309,6 +311,7 @@ public class InterfaceInfoController {
         return ResultUtils.success(result);
     }
 
+    static Map<String, Method> methodMap = new HashMap<>();
     public Object reflectionInterface(Class<?> reflectionClass, String methodName, String parameter, String accessKey, String secretKey) {
         //构造反射类的实例
         Object result = null;
@@ -317,24 +320,24 @@ public class InterfaceInfoController {
             //获取SDK的实例，同时传入密钥
             CmApiClient tempClient = (CmApiClient) constructor.newInstance(accessKey, secretKey);
             //获取SDK中所有的方法
-            Method[] methods = tempClient.getClass().getMethods();
-            //筛选出调用方法
-            for (Method method : methods
-            ) {
-                if (method.getName().equals(methodName)) {
-                    //获取方法参数类型
-                    Class<?>[] parameterTypes = method.getParameterTypes();
-                    Method method1;
-                    if (parameterTypes.length == 0){
-                        method1 = tempClient.getClass().getMethod(methodName);
-                        return method1.invoke(tempClient);
-                    }
-                    method1 = tempClient.getClass().getMethod(methodName, parameterTypes[0]);
-                    //getMethod，多参会考虑重载情况获取方法,前端传来参数是JSON格式转换为String类型
-                    //参数Josn化
+            if(methodMap.isEmpty()){
+                Method[] methods = tempClient.getClass().getMethods();
+                for (Method method : methods) {
+                    methodMap.put(method.getName(), method);
+                }
+            }
+            Method targetMethod = methodMap.get(methodName);
+            // 如果方法对象存在，则继续执行调用逻辑
+            if (targetMethod != null) {
+                Class<?>[] parameterTypes = targetMethod.getParameterTypes();
+                if (parameterTypes.length == 0) {
+                    // 如果方法没有参数，则直接调用无参方法
+                    return targetMethod.invoke(tempClient);
+                } else {
+                    // 如果方法有参数，则从参数字符串中解析出参数对象，然后调用有参方法
                     Gson gson = new Gson();
                     Object args = gson.fromJson(parameter, parameterTypes[0]);
-                    return result = method1.invoke(tempClient, args);
+                    return targetMethod.invoke(tempClient, args);
                 }
             }
         } catch (Exception e) {
