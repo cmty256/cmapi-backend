@@ -1,15 +1,25 @@
 package com.chenmeng.controller;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.chenmeng.sdk.model.RequestParams;
 import org.apache.commons.lang3.StringUtils;
 import com.chenmeng.sdk.model.User;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Objects;
 
 
 /**
@@ -126,6 +136,34 @@ public class NameController {
             return "解析失败！！";
         }
         return result;
+    }
+
+    /**
+     * 获取QQ头像
+     * @param user
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/qq")
+    public ResponseEntity<InputStreamResource> getAvatarByQqName(@RequestBody User user) throws IOException {
+
+        String imageUrl = "https://q.qlogo.cn/g?b=qq&s=100&nk=" + user.getAccount();
+        if (StringUtils.isBlank(imageUrl)){
+            throw new NullPointerException("获取QQ头像失败！！");
+        }
+        // 打开图片URL连接
+        // 创建一个URL对象以便访问图片URL
+        URL url = new URL(Objects.requireNonNull(imageUrl));
+        // 打开与图片URL的连接
+        URLConnection connection = url.openConnection();
+        // 获取连接的输入流，以获取图片数据
+        InputStream inputStream = connection.getInputStream();
+        // 创建一个`InputStreamResource`对象，将图片的输入流封装为资源对象
+        InputStreamResource resource = new InputStreamResource(inputStream);
+        // 构建并返回一个ResponseEntity,包含图片资源和响应头信息,设置响应内容类型为图片类型,将资源对象作为响应主体返回
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(resource);
     }
 
 }
